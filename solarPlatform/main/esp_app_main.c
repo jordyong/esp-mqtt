@@ -27,7 +27,8 @@ void app_main(void) {
 
   ESP_ERROR_CHECK(nvs_flash_init());
 
-  start_wifi_manager();
+  ESP_ERROR_CHECK(wifi_manager_start());
+  ESP_ERROR_CHECK(mqtt_manager_start());
 
-  mqtt_manager_start();
+  mqtt_manager_publish_json("test", "test", 1, 0, 0);
 }

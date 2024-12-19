@@ -80,7 +80,7 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base,
   }
 }
 
-void start_wifi_manager(void) {
+esp_err_t wifi_manager_start(void) {
   ESP_LOGI(TAG, "Starting wifi_manager...");
   ESP_ERROR_CHECK(esp_netif_init());
   ESP_ERROR_CHECK(esp_event_loop_create_default());
@@ -128,7 +128,10 @@ void start_wifi_manager(void) {
   } else if (bits & WIFI_FAIL_BIT) {
     ESP_LOGI(TAG, "Failed to connect to SSID:%s, password:%s", WIFI_SSID,
              WIFI_PASS);
+    return ESP_FAIL;
   } else {
     ESP_LOGE(TAG, "UNEXPECTED EVENT");
+    return ESP_FAIL;
   }
+  return ESP_OK;
 }
