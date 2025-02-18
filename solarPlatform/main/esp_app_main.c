@@ -15,6 +15,7 @@
 #include "lwip/sockets.h"
 
 #include "mqtt_manager.h"
+#include "uartManager.h"
 #include "wifi_manager.h"
 
 static const char *TAG = "Solar Platform";
@@ -29,6 +30,6 @@ void app_main(void) {
 
   ESP_ERROR_CHECK(wifi_manager_start());
   ESP_ERROR_CHECK(mqtt_manager_start());
-
+  ESP_ERROR_CHECK(uartManager_init());
   mqtt_manager_publish_json("test", "test", 1, 0, 0);
 }
