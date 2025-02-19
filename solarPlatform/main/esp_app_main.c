@@ -14,9 +14,9 @@
 #include "lwip/netdb.h"
 #include "lwip/sockets.h"
 
-#include "mqtt_manager.h"
+#include "mqttManager.h"
 #include "uartManager.h"
-#include "wifi_manager.h"
+#include "wifiManager.h"
 
 static const char *TAG = "Solar Platform";
 

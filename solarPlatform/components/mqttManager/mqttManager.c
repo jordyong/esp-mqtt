@@ -10,7 +10,7 @@
 
 #include "mqtt_client.h"
 
-#include "mqtt_manager.h"
+#include "mqttManager.h"
 
 static const char *TAG = "MQTT Manager";
 static char *clientID;

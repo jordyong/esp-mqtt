@@ -16,7 +16,7 @@
 #include "esp_wifi.h"
 #include <stdint.h>
 
-#include "wifi_manager.h"
+#include "wifiManager.h"
 
 #define WIFI_SSID CONFIG_ESP_WIFI_SSID
 #define WIFI_PASS CONFIG_ESP_WIFI_PASSWORD
