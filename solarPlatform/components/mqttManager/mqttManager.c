@@ -1,20 +1,23 @@
 
 #include <cJSON.h>
 #include <stdint.h>
+// c std files
 #include <stdio.h>
 #include <string.h>
-
+// ESP systems
 #include "esp_err.h"
 #include "esp_log.h"
 #include "esp_mac.h"
-
+// ESP-idf components
 #include "mqtt_client.h"
-
+// User-defined
 #include "mqttManager.h"
 
 static const char *TAG = "MQTT Manager";
 static char *clientID;
 static esp_mqtt_client_handle_t client;
+
+static const char *GPS_TOPIC = "devices/gps";
 
 typedef struct {
   const char *topic;
