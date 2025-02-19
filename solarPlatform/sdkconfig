@@ -385,13 +385,13 @@ CONFIG_PARTITION_TABLE_MD5=y
 # end of Partition Table
 
 #
-# Example Configuration
+# MQTT Configuration
 #
 CONFIG_BROKER_URL="mqtt://192.168.18.72"
-# end of Example Configuration
+# end of MQTT Configuration
 
 #
-# Example Configuration
+# WIFI Configuration
 #
 CONFIG_ESP_WIFI_SSID="GL-MT3000-890"
 CONFIG_ESP_WIFI_PASSWORD="5MWBF2MXNS"
@@ -408,7 +408,7 @@ CONFIG_ESP_WIFI_AUTH_WPA2_PSK=y
 # CONFIG_ESP_WIFI_AUTH_WPA3_PSK is not set
 # CONFIG_ESP_WIFI_AUTH_WPA2_WPA3_PSK is not set
 # CONFIG_ESP_WIFI_AUTH_WAPI_PSK is not set
-# end of Example Configuration
+# end of WIFI Configuration
 
 #
 # Compiler options
