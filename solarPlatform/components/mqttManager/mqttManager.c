@@ -77,7 +77,7 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base,
   switch ((esp_mqtt_event_id_t)event_id) {
   case MQTT_EVENT_CONNECTED:
     ESP_LOGI(TAG, "MQTT_EVENT_CONNECTED");
-    esp_mqtt_client_publish(client, "swarm/connected/ID",
+    esp_mqtt_client_publish(client, "devices/connected",
                             create_json_string(clientID, 1), 0, 2, 1);
     mqtt_manager_subscribe("cmd/movement", 0, NULL);
     break;
@@ -145,7 +145,7 @@ esp_err_t mqtt_manager_start(void) {
       .session.keepalive = 60,
       .session.last_will =
           {
-              .topic = "swarm/connected/ID",
+              .topic = "devices/disconnected",
               .msg = create_json_string(clientID, 0),
               .msg_len = 0,
               .qos = 2,

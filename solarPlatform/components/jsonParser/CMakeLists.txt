@@ -1,5 +1,5 @@
 idf_component_register(
   SRC_DIRS "."
   INCLUDE_DIRS "."
-  REQUIRES esp_driver_uart esp_driver_gpio jsonParser 
+  PRIV_REQUIRES json 
 )
