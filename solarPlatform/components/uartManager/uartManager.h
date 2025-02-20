@@ -6,7 +6,7 @@
 extern "C" {
 #endif
 
-esp_err_t uartManager_init();
+esp_err_t uart_manager_start();
 int sendData(const char *data);
 
 #ifdef __cplusplus

@@ -20,16 +20,22 @@
 
 static const char *TAG = "Solar Platform";
 
-void app_main(void) {
+static void app_init(void) {
   ESP_LOGI(TAG, "[APP] Startup..");
   ESP_LOGI(TAG, "[APP] Free memory: %" PRIu32 " bytes",
            esp_get_free_heap_size());
   ESP_LOGI(TAG, "[APP] IDF version: %s", esp_get_idf_version());
 
   ESP_ERROR_CHECK(nvs_flash_init());
+}
 
+static void app_start() {
   ESP_ERROR_CHECK(wifi_manager_start());
   ESP_ERROR_CHECK(mqtt_manager_start());
-  ESP_ERROR_CHECK(uartManager_init());
-  mqtt_manager_publish_json("test", "test", 1, 0, 0);
+  ESP_ERROR_CHECK(uart_manager_start());
+}
+
+void app_main(void) {
+  app_init();
+  app_start();
 }
