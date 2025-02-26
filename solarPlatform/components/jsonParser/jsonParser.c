@@ -9,8 +9,17 @@ static const char *TAG = "jsonParser";
 
 void json_uartParser(const char *c) {
   cJSON *root = cJSON_Parse(c);
+  if (root == NULL) {
+    ESP_LOGI(TAG, "Not a valid JSON message");
+    return;
+  }
 
   cJSON *serial_type = cJSON_GetObjectItem(root, "serial_type");
+  if (serial_type == NULL) {
+    ESP_LOGI(TAG, "'serial_type' field not found");
+    return;
+  }
+
   char *serial_type_value = serial_type->valuestring;
 
   if (strcmp(serial_type_value, "GPS") == 0) {

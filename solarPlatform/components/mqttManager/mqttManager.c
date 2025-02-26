@@ -17,8 +17,7 @@
 static const char *TAG = "MQTT Manager";
 static char *clientID;
 static esp_mqtt_client_handle_t client;
-
-static const char *GPS_TOPIC = "devices/gps";
+static int mqtt_connected = 0;
 
 typedef struct {
   const char *topic;
@@ -69,12 +68,14 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base,
   switch ((esp_mqtt_event_id_t)event_id) {
   case MQTT_EVENT_CONNECTED:
     ESP_LOGI(TAG, "MQTT_EVENT_CONNECTED");
+    mqtt_connected = 1;
     esp_mqtt_client_publish(client, "devices/connected",
                             create_json_string(clientID, 1), 0, 2, 1);
     mqtt_manager_subscribe("cmd/#", 0, NULL);
     break;
   case MQTT_EVENT_DISCONNECTED:
     ESP_LOGI(TAG, "MQTT_EVENT_DISCONNECTED");
+    mqtt_connected = 0;
     break;
   case MQTT_EVENT_SUBSCRIBED:
     ESP_LOGI(TAG, "MQTT_EVENT_SUBSCRIBED, msg_id=%d", event->msg_id);
@@ -90,12 +91,12 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base,
     printf("TOPIC=%.*s\r\n", event->topic_len, event->topic);
     printf("DATA=%.*s\r\n", event->data_len, event->data);
 
-    /*json_mqttParser(event->data);*/
-    mqtt_message_callback_t callback = get_callback(event->topic);
+    json_mqttParser(event->data);
+    /*mqtt_message_callback_t callback = get_callback(event->topic);*/
 
-    if (callback != NULL) {
-      callback(event->topic, event->data, event->data_len);
-    }
+    /*if (callback != NULL) {*/
+    /*  callback(event->topic, event->data, event->data_len);*/
+    /*}*/
     break;
   case MQTT_EVENT_ERROR:
     ESP_LOGI(TAG, "MQTT_EVENT_ERROR");
@@ -158,7 +159,10 @@ esp_err_t mqtt_manager_stop(void) { return ESP_OK; }
 
 esp_err_t mqtt_manager_publish_json(const char *topic, const char *json_msg,
                                     int qos, int retain) {
-
+  if (mqtt_connected == 0) {
+    ESP_LOGE(TAG, "MQTT not connected");
+    return ESP_FAIL;
+  }
   int msg_id = esp_mqtt_client_publish(client, topic, json_msg, 0, qos, retain);
   if (msg_id < 0) {
     ESP_LOGE(TAG, "Failed to publish to topic :%s", topic);
@@ -169,6 +173,7 @@ esp_err_t mqtt_manager_publish_json(const char *topic, const char *json_msg,
   return ESP_OK;
 }
 
+// Appends clientID and devices to the topic
 esp_err_t mqtt_manager_subscribe(const char *topic, int qos,
                                  mqtt_message_callback_t callback) {
   size_t nbytes = snprintf(NULL, 0, "devices/%s/%s", clientID, topic) + 1;

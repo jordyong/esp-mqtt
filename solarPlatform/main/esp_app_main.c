@@ -35,7 +35,26 @@ static void app_start() {
   ESP_ERROR_CHECK(uart_manager_start());
 }
 
+static void tx_task(void *arg) {
+  static const char *TX_TASK_TAG = "TX_TASK";
+  esp_log_level_set(TX_TASK_TAG, ESP_LOG_INFO);
+  const char *input =
+      "{\n\"serial_type\":\"GPS\",\n\t\"data\":{\n\t\"lng\":103.003,"
+      "\n\t\"lat\":1.002}\n}";
+  while (1) {
+    sendData(input);
+    vTaskDelay(2000 / portTICK_PERIOD_MS);
+  }
+}
+
+static void test() {
+  xTaskCreate(tx_task, "uart_tx_task", 1024 * 2, NULL, configMAX_PRIORITIES - 2,
+              NULL);
+}
+
 void app_main(void) {
   app_init();
   app_start();
+
+  /*test();*/
 }
