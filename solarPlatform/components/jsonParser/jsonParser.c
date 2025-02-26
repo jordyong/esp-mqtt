@@ -13,7 +13,7 @@ void json_uartParser(const char *c) {
   cJSON *serial_type = cJSON_GetObjectItem(root, "serial_type");
   char *serial_type_value = serial_type->valuestring;
 
-  if (strcmp(serial_type_value, "gps") == 0) {
+  if (strcmp(serial_type_value, "GPS") == 0) {
     cJSON_AddStringToObject(root, "device_ID", get_espID());
     mqtt_manager_publish_json("devices/status/gps", cJSON_Print(root), 0, 0);
   } else {
