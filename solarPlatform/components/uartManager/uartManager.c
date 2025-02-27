@@ -93,7 +93,7 @@ int readData(const int len) {
   uint8_t *dtmp = (uint8_t *)malloc(RD_BUF_SIZE);
   bzero(dtmp, RD_BUF_SIZE);
   const int rxBytes = uart_read_bytes(EX_UART_NUM, dtmp, len, portMAX_DELAY);
-  ESP_LOGI(TAG, "Read '%s', [%d bytes]\n", dtmp, rxBytes);
+  ESP_LOGI(TAG, "Read '%s'\n", dtmp);
   // parse json data
   json_uartParser((char *)dtmp);
 

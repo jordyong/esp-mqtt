@@ -1,5 +1,5 @@
 idf_component_register(
   SRC_DIRS "."
   INCLUDE_DIRS "."
-  PRIV_REQUIRES json mqttManager 
+  PRIV_REQUIRES json mqttManager uartManager 
 )

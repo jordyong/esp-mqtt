@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "mqttManager.h"
+#include "uartManager.h"
 
 #include "esp_log.h"
 static const char *TAG = "jsonParser";
@@ -20,11 +21,16 @@ void json_uartParser(const char *c) {
     return;
   }
 
+  cJSON *data = cJSON_GetObjectItem(root, "data");
+  if (data == NULL) {
+    ESP_LOGI(TAG, "'data' field not found");
+    return;
+  }
   char *serial_type_value = serial_type->valuestring;
 
   if (strcmp(serial_type_value, "GPS") == 0) {
-    cJSON_AddStringToObject(root, "device_ID", get_espID());
-    mqtt_manager_publish_json("devices/status/gps", cJSON_Print(root), 0, 0);
+    cJSON_AddStringToObject(data, "device_ID", get_espID());
+    mqtt_manager_publish_json("devices/status/gps", cJSON_Print(data), 0, 0);
   } else {
     ESP_LOGI(TAG, "Unknown serial type: '%s'", serial_type_value);
   }
@@ -32,4 +38,17 @@ void json_uartParser(const char *c) {
   cJSON_Delete(root);
 }
 
-void json_mqttParser(const char *c) { ESP_LOGI(TAG, "received mqtt: '%s'", c); }
+void json_mqttParser(const char *c) {
+  cJSON *data = cJSON_Parse(c);
+  if (data == NULL) {
+    ESP_LOGI(TAG, "Not a valid JSON message");
+    return;
+  }
+  cJSON_DeleteItemFromObject(data, "device_ID");
+
+  cJSON *root = cJSON_CreateObject();
+  cJSON_AddStringToObject(root, "serial_type", "GPS");
+  cJSON_AddItemToObject(root, "data", data);
+
+  sendData(cJSON_Print(root));
+}
