@@ -12,6 +12,7 @@
 #include "uartManager.h"
 
 #include "esp_log.h"
+#include "portmacro.h"
 static const char *TAG = "uartManager";
 
 #define EX_UART_NUM UART_NUM_1
@@ -22,7 +23,7 @@ static const char *TAG = "uartManager";
 #define RD_BUF_SIZE (BUF_SIZE)
 static QueueHandle_t uart_queue;
 
-int readData(const int len);
+int readData(const int size);
 
 void uart_event_task(void *pvParameters) {
   uart_event_t event;
@@ -88,18 +89,33 @@ int sendData(const char *data) {
   return txBytes;
 }
 
-int readData(const int len) {
+int readData(const int size) {
   // read from UART buffer
   uint8_t *dtmp = (uint8_t *)malloc(RD_BUF_SIZE);
+  uint8_t *btmp = (uint8_t *)malloc(RD_BUF_SIZE * 2);
   bzero(dtmp, RD_BUF_SIZE);
-  const int rxBytes = uart_read_bytes(EX_UART_NUM, dtmp, len, portMAX_DELAY);
-  ESP_LOGI(TAG, "Read '%s'\n", dtmp);
-  // parse json data
-  json_uartParser((char *)dtmp);
+  bzero(btmp, RD_BUF_SIZE);
 
+  int rxBytes = 0, len = 0;
+  while (1) {
+    len = uart_read_bytes(EX_UART_NUM, dtmp, RD_BUF_SIZE, pdMS_TO_TICKS(1000));
+    ESP_LOGI(TAG, "Read [%d]", len);
+    if (len > 0) {
+      ESP_LOGI(TAG, "Read '%s'[%d]\n", dtmp, len);
+      strncpy((char *)btmp + rxBytes, (char *)dtmp, len);
+    } else {
+      break;
+    }
+  }
+
+  ESP_LOGI(TAG, "Read '%s'\n", btmp);
+  // parse json data
+  json_uartParser((char *)btmp);
   // clean up
   free(dtmp);
+  free(btmp);
   dtmp = NULL;
+  btmp = NULL;
   return rxBytes;
 }
 

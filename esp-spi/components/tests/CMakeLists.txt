@@ -1,6 +1,5 @@
-
 idf_component_register(
   SRC_DIRS "."
   INCLUDE_DIRS "."
-  REQUIRES esp_driver_i2c esp_timer
+  PRIV_REQUIRES esp32_BNO08x motors_control esp_gps
 )

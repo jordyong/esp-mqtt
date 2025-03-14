@@ -1,0 +1,17 @@
+menu "GPS UART GPIO"
+
+        config ESP32_UART_TX
+            int "UART_TX" 
+            range 0 50
+            default 33
+            help
+                ESP UART TX PIN.
+
+                    
+        config ESP32_UART_RX
+            int "UART_RX" 
+            range 0 50
+            default 32 
+            help
+                ESP UART RX PIN.
+ endmenu

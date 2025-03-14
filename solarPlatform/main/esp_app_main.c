@@ -56,5 +56,5 @@ void app_main(void) {
   app_init();
   app_start();
 
-  /*test();*/
+  test();
 }

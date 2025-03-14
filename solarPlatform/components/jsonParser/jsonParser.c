@@ -9,6 +9,7 @@
 #include "esp_log.h"
 static const char *TAG = "jsonParser";
 
+// Analyse the Uart json and extract the data object
 void json_uartParser(const char *c) {
   cJSON *root = cJSON_Parse(c);
   if (root == NULL) {
@@ -31,14 +32,10 @@ void json_uartParser(const char *c) {
 
   if (strcmp(serial_type_value, "GPS") == 0) {
     cJSON_AddStringToObject(data, "device_ID", get_espID());
-
-    cJSON *longitude = cJSON_GetObjectItem(data, "longitude");
-    cJSON *latitude = cJSON_GetObjectItem(data, "latitude");
-
-    longitude->valuedouble = ddmmIntoDD(longitude->valuedouble);
-    latitude->valuedouble = ddmmIntoDD(latitude->valuedouble);
-
     mqtt_manager_publish_json("devices/status/gps", cJSON_Print(data), 0, 0);
+  } else if (strcmp(serial_type_value, "Power") == 0) {
+    cJSON_AddStringToObject(data, "device_ID", get_espID());
+    mqtt_manager_publish_json("devices/status/power", cJSON_Print(data), 0, 0);
   } else {
     ESP_LOGI(TAG, "Unknown serial type: '%s'", serial_type_value);
   }
@@ -46,6 +43,7 @@ void json_uartParser(const char *c) {
   cJSON_Delete(root);
 }
 
+// Take the json object from mqtt and pass it to uart
 void json_mqttParser(const char *c) {
   cJSON *data = cJSON_Parse(c);
   if (data == NULL) {
@@ -53,12 +51,6 @@ void json_mqttParser(const char *c) {
     return;
   }
   cJSON_DeleteItemFromObject(data, "device_ID");
-
-  cJSON *longitude = cJSON_GetObjectItem(data, "longitude");
-  cJSON *latitude = cJSON_GetObjectItem(data, "latitude");
-
-  longitude->valuedouble = DDToddmm(longitude->valuedouble);
-  latitude->valuedouble = DDToddmm(latitude->valuedouble);
 
   cJSON *root = cJSON_CreateObject();
   cJSON_AddStringToObject(root, "serial_type", "GPS");

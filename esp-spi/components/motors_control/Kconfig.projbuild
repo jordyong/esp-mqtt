@@ -1,0 +1,31 @@
+menu "MOTOR GPIO"
+
+        config ESP32_MOTOR1_DIR
+            int "MOTOR1_DIR" 
+            range 0 50
+            default 21
+            help
+                ESP MOTOR1 DIR PIN.
+
+                    
+        config ESP32_MOTOR2_DIR
+            int "MOTOR2_DIR" 
+            range 0 50
+            default 22 
+            help
+                ESP MOTOR2 DIR PIN.
+
+        config ESP32_MOTOR1_PWM
+            int "MOTOR1_PWM" 
+            range 0 50
+            default 16 
+            help
+                ESP MOTOR1 PWM PIN.
+
+        config ESP32_MOTOR2_PWM
+            int "MOTOR2_PWM" 
+            range 0 50
+            default 17 
+            help
+                ESP MOTOR2 PWM PIN.
+ endmenu
