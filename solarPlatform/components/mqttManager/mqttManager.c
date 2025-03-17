@@ -80,7 +80,6 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base,
     break;
   case MQTT_EVENT_DATA:
     ESP_LOGI(TAG, "MQTT_EVENT_DATA");
-
     json_mqttParser(event->data);
     break;
   case MQTT_EVENT_ERROR:

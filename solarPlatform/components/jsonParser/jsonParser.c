@@ -53,7 +53,7 @@ void json_mqttParser(const char *c) {
   cJSON_DeleteItemFromObject(data, "device_ID");
 
   cJSON *root = cJSON_CreateObject();
-  cJSON_AddStringToObject(root, "serial_type", "GPS");
+  cJSON_AddStringToObject(root, "serial_type", "CMD");
   cJSON_AddItemToObject(root, "data", data);
 
   sendData(cJSON_Print(root));
